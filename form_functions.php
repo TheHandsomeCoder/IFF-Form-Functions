@@ -17,11 +17,29 @@ function change_iff_renew_message( $message, $form ) {
 
 add_filter( 'gform_validation_1', 'validate_iff_input' );
 function validate_iff_input( $validation_result ) {
-    
-    $form = $validation_result['form'];
+	$formID = 2;
+   
+    $email = rgpost( "input_1" );
+    $iff_number = rgpost("input_2");  
 
-    $validation_result['is_valid'] = true;    
+    $search_criteria = array(
+        'field_filters' => array(
+            'mode' => 'all',            
+            array(
+                'key' => '1',
+                'value' => $email
+            ),
+            array(
+                'key' => '2',
+                'value' => $iff_number
+          	)
+        )
+    );
+        
+    $detailsFound = GFAPI::get_entries($formID, $search_criteria);
 
+    $validation_result['is_valid'] = (count($detailsFound) == 1 ? true : false);        
+  
     return $validation_result;
 }
 
@@ -30,6 +48,5 @@ add_filter( 'gform_pre_submission_1', 'iff_renewal_form_pre_submission' );
 function iff_renewal_form_pre_submission( $form ) {
     $_POST['input_3'] = strval(md5(uniqid(rand(), true)));
 }
-
 
 ?>
