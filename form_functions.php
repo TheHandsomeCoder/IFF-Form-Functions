@@ -26,7 +26,7 @@ function form_functions_validate_iff_input( $validation_result ) {
     	'field_filters' => array(
             'mode' => 'all',            
             array(
-                'key' => '5',
+                'key' => '5.1',
                 'value' => $email
             ),
             array(
