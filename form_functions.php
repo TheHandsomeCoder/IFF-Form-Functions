@@ -9,11 +9,11 @@ GitHub Branch:     master
 */
 //------------------------------------------
 
-add_filter( 'gform_validation_message_22', 'change_iff_renew_message', 10, 2 );
+// add_filter( 'gform_validation_message_22', 'change_iff_renew_message', 10, 2 );
 
-function change_iff_renew_message( $message, $form ) {
-  return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
-}
+// function change_iff_renew_message( $message, $form ) {
+//   return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
+// }
 
 add_filter( 'gform_validation_22', 'form_functions_validate_iff_input' );
 function form_functions_validate_iff_input( $validation_result ) {
