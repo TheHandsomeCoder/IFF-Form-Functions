@@ -22,9 +22,6 @@ function form_functions_validate_iff_input( $validation_result ) {
     $email = rgpost( "input_1" );
     $iff_number = rgpost("input_2");  
 
-    iff_debug_to_console($email);
-    iff_debug_to_console($iff_number);
-
     $search_criteria = array(
     	'field_filters' => array(
             'mode' => 'all',            
@@ -41,10 +38,6 @@ function form_functions_validate_iff_input( $validation_result ) {
         
     $detailsFound = GFAPI::get_entries($formID, $search_criteria);
 
-    $debug_details =  GFAPI::get_entry(36);
-
-
-    iff_debug_to_console(json_encode($debug_details));
     $validation_result['is_valid'] = (count($detailsFound) == 1 ? true : false);        
   
     return $validation_result;
@@ -94,16 +87,5 @@ function iff_renewal_form_post_submission( $form ) {
     }
 
 }
-
-function iff_debug_to_console( $data ) {
-
-    if ( is_array( $data ) )
-        $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-    else
-        $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
-
-    echo $output;
-}
-
 
 ?>
