@@ -41,11 +41,10 @@ function form_functions_validate_iff_input( $validation_result ) {
         
     $detailsFound = GFAPI::get_entries($formID, $search_criteria);
    
-    iff_debug_to_console(json_encode($detailsFound));
     iff_debug_to_console(count($detailsFound));
    
     $is_valid = (count($detailsFound) == 1) ? true : false;       
-     iff_debug_to_console($is_valid);
+    iff_debug_to_console($is_valid);
 
     $validation_result['is_valid'] = $is_valid;
   
