@@ -31,23 +31,17 @@ function form_functions_validate_iff_input( $validation_result ) {
             array(
                 'key' => '5',
                 'value' => $email
-            ),
-            array(
-                'key' => '19',
-                'value' => $iff_number
-          	)
+            )
         )
     );
         
     $detailsFound = GFAPI::get_entries($formID, $search_criteria);
     $debug_data = GFAPI::get_entry(36);
 
+    iff_debug_to_console(json_encode($detailsFound));
     iff_debug_to_console(json_encode($debug_data));
    
-
-
-
-
+   
     $validation_result['is_valid'] = (count($detailsFound) == 1 ? true : false);        
   
     return $validation_result;
