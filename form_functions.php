@@ -47,7 +47,7 @@ function form_functions_validate_iff_input( $validation_result ) {
 
     if(count($detailsFound) == 1){
         iff_debug_to_console('Woot');
-        $validation_result['is_valid'] = true;
+        //$validation_result['is_valid'] = true;
     }
     else {
         iff_debug_to_console('rats');
