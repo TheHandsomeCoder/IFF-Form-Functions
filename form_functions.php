@@ -9,28 +9,28 @@ GitHub Branch: master
 */
 //------------------------------------------
 
-add_filter( 'gform_validation_message_1', 'change_iff_renew_message', 10, 2 );
+add_filter( 'gform_validation_message_22', 'change_iff_renew_message', 10, 2 );
 
 function change_iff_renew_message( $message, $form ) {
   return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
 }
 
-add_filter( 'gform_validation_1', 'validate_iff_input' );
+add_filter( 'gform_validation_22', 'validate_iff_input' );
 function validate_iff_input( $validation_result ) {
-	$formID = 2;
+	$formID = 1;
    
     $email = rgpost( "input_1" );
     $iff_number = rgpost("input_2");  
 
     $search_criteria = array(
-        'field_filters' => array(
+    	'field_filters' => array(
             'mode' => 'all',            
             array(
-                'key' => '1',
+                'key' => '5',
                 'value' => $email
             ),
             array(
-                'key' => '2',
+                'key' => '19',
                 'value' => $iff_number
           	)
         )
@@ -44,9 +44,48 @@ function validate_iff_input( $validation_result ) {
 }
 
 
-add_filter( 'gform_pre_submission_1', 'iff_renewal_form_pre_submission' );
+add_filter( 'gform_pre_submission_22', 'iff_renewal_form_pre_submission' );
 function iff_renewal_form_pre_submission( $form ) {
     $_POST['input_3'] = strval(md5(uniqid(rand(), true)));
+}
+
+add_filter( 'gform_after_submission_22', 'iff_renewal_form_post_submission' );
+function iff_renewal_form_post_submission( $form ) {
+
+	$formID = 22;
+   
+    $email = rgpost( "input_1" );
+    $iff_number = rgpost("input_2");  
+    $hash = rgpost("input_3");  
+
+    debug_to_console($hash);
+
+    $search_criteria = array(
+    	'status' => 'active',
+        'field_filters' => array(
+            'mode' => 'all',            
+            array(
+                'key' => '1',
+                'value' => $email
+            ),
+            array(
+                'key' => '2',
+                'value' => $iff_number
+          	),
+          	array(
+                'key' => '3',
+                'operator' => 'isnot',
+                'value' => $hash
+          	)
+        )
+    );
+        
+    $data = GFAPI::get_entries($formID, $search_criteria);
+
+    foreach ($data as $value) {
+    	GFAPI::delete_entry($value['id']);
+    }
+
 }
 
 ?>
