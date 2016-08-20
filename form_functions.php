@@ -41,7 +41,7 @@ function form_functions_validate_iff_input( $validation_result ) {
     iff_debug_to_console(count($detailsFound));
    
 
-    $validation_result['is_valid'] = (count($detailsFound) == 1 ? true : false);        
+    $validation_result['is_valid'] = (count($detailsFound) == 1) ? true : false;        
   
     return $validation_result;
 }
