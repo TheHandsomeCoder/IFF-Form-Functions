@@ -43,10 +43,16 @@ function form_functions_validate_iff_input( $validation_result ) {
    
     iff_debug_to_console(count($detailsFound));
    
-    $is_valid = (count($detailsFound) == 1) ? true : false;       
-    iff_debug_to_console($is_valid);
+      
 
-    $validation_result['is_valid'] = $is_valid;
+    if(count($detailsFound) == 1){
+        iff_debug_to_console('Woot');
+        $validation_result['is_valid'] = true;
+    }
+    else {
+        iff_debug_to_console('rats');
+         $validation_result['is_valid'] = false;
+    }    
   
     return $validation_result;
 }
