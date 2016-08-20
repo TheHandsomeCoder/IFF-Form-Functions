@@ -4,8 +4,8 @@ Plugin Name: IFF Membership Form Functions
 Description: Plugin for abstracting custom form functions
 Author: Scott O'Malley
 Version: 1.0
-GitHub Plugin URI: https://github.com/thehandsomecoder/IFFMembershipLookupTool
-GitHub Branch: master
+GitHub Plugin URI: https://github.com/TheHandsomeCoder/IFF-Form-Functions
+GitHub Branch:     master
 */
 //------------------------------------------
 
