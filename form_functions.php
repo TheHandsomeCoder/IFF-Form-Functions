@@ -3,17 +3,17 @@
 Plugin Name: IFF Membership Form Functions
 Description: Plugin for abstracting custom form functions
 Author: Scott O'Malley
-Version: 1.2.1
+Version: 1.1
 GitHub Plugin URI: https://github.com/TheHandsomeCoder/IFF-Form-Functions
 GitHub Branch:     master
 */
 //------------------------------------------
 
-// add_filter( 'gform_validation_message_22', 'change_iff_renew_message', 10, 2 );
+add_filter( 'gform_validation_message_22', 'change_iff_renew_message', 10, 2 );
 
-// function change_iff_renew_message( $message, $form ) {
-//   return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
-// }
+function change_iff_renew_message( $message, $form ) {
+  return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
+}
 
 add_filter( 'gform_validation_22', 'form_functions_validate_iff_input' );
 function form_functions_validate_iff_input( $validation_result ) {
@@ -21,9 +21,6 @@ function form_functions_validate_iff_input( $validation_result ) {
    
     $email = rgpost( "input_1" );
     $iff_number = rgpost("input_2");  
-
-    iff_debug_to_console( $email);
-    iff_debug_to_console( $iff_number);
 
     $search_criteria = array(
     	'field_filters' => array(
@@ -35,24 +32,13 @@ function form_functions_validate_iff_input( $validation_result ) {
             array(
                 'key' => '19',
                 'value' => $iff_number
-            )
+          	)
         )
     );
         
     $detailsFound = GFAPI::get_entries($formID, $search_criteria);
-   
-    iff_debug_to_console(count($detailsFound));
-   
-      
 
-    if(count($detailsFound) == 1){
-        iff_debug_to_console('Woot');
-        //$validation_result['is_valid'] = true;
-    }
-    else {
-        iff_debug_to_console('rats');
-         $validation_result['is_valid'] = false;
-    }    
+    $validation_result['is_valid'] = (count($detailsFound) == 1 ? true : false);        
   
     return $validation_result;
 }
@@ -71,8 +57,6 @@ function iff_renewal_form_post_submission( $form ) {
     $email = rgpost( "input_1" );
     $iff_number = rgpost("input_2");  
     $hash = rgpost("input_3");  
-
-    debug_to_console($hash);
 
     $search_criteria = array(
     	'status' => 'active',
@@ -101,16 +85,5 @@ function iff_renewal_form_post_submission( $form ) {
     }
 
 }
-
-function iff_debug_to_console( $data ) {
-
-    if ( is_array( $data ) )
-        $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-    else
-        $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
-
-    echo $output;
-}
-
 
 ?>
