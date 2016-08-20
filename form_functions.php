@@ -31,6 +31,10 @@ function form_functions_validate_iff_input( $validation_result ) {
             array(
                 'key' => '5',
                 'value' => $email
+            ),
+            array(
+                'key' => '19',
+                'value' => $iff_number
             )
         )
     );
@@ -40,8 +44,10 @@ function form_functions_validate_iff_input( $validation_result ) {
     iff_debug_to_console(json_encode($detailsFound));
     iff_debug_to_console(count($detailsFound));
    
+    $is_valid = (count($detailsFound) == 1) ? true : false;       
+     iff_debug_to_console($is_valid);
 
-    $validation_result['is_valid'] = (count($detailsFound) == 1) ? true : false;        
+    $validation_result['is_valid'] = $is_valid;
   
     return $validation_result;
 }
