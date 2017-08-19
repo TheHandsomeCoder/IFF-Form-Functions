@@ -3,7 +3,7 @@
 Plugin Name: IFF Membership Form Functions
 Description: Plugin for abstracting custom form functions
 Author: Scott O'Malley
-Version: 1.3
+Version: 1.4
 GitHub Plugin URI: https://github.com/TheHandsomeCoder/IFF-Form-Functions
 GitHub Branch:     master
 */
@@ -11,20 +11,20 @@ GitHub Branch:     master
 
 add_filter( 'gform_validation_message_22', 'change_iff_renew_message', 10, 2 );
 
-function change_iff_renew_message( $message, $form ) {
-  return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
+function change_iff_renew_message($message, $form)
+{
+    return "<div class='validation_error'>" . esc_html__( "There was a problem with the data entered.", 'gravityforms' ) . ' ' . esc_html__( "The email and IFF number entered don't match our records", "gravityforms" ) . "</div>";
 }
 
 add_filter( 'gform_validation_22', 'form_functions_validate_iff_input' );
-function form_functions_validate_iff_input( $validation_result ) {
-	$formID = 1;
-   
+function form_functions_validate_iff_input($validation_result)
+{
     $email = rgpost( "input_1" );
-    $iff_number = rgpost("input_2");  
+    $iff_number = rgpost("input_2");
 
     $search_criteria = array(
-    	'field_filters' => array(
-            'mode' => 'all',            
+        'field_filters' => array(
+            'mode' => 'all',
             array(
                 'key' => '5',
                 'value' => $email
@@ -32,36 +32,40 @@ function form_functions_validate_iff_input( $validation_result ) {
             array(
                 'key' => '19',
                 'value' => $iff_number
-          	)
+            )
         )
     );
-        
-    $detailsFound = GFAPI::get_entries($formID, $search_criteria);
 
-    $validation_result['is_valid'] = (count($detailsFound) == 1 ? true : false);        
-  
+    $licenced2015 = GFAPI::get_entries(1, $search_criteria);
+    $licenced2016 = GFAPI::get_entries(21, $search_criteria);
+
+
+    $validation_result['is_valid'] = (count($licenced2015) == 1 || count($licenced2016) == 1);
+
     return $validation_result;
 }
 
 
 add_filter( 'gform_pre_submission_22', 'iff_renewal_form_pre_submission' );
-function iff_renewal_form_pre_submission( $form ) {
+function iff_renewal_form_pre_submission($form)
+{
     $_POST['input_3'] = strval(md5(uniqid(rand(), true)));
 }
 
 add_filter( 'gform_after_submission_22', 'iff_renewal_form_post_submission' );
-function iff_renewal_form_post_submission( $form ) {
+function iff_renewal_form_post_submission($form)
+{
 
-	$formID = 22;
-   
+    $formID = 22;
+
     $email = rgpost( "input_1" );
-    $iff_number = rgpost("input_2");  
-    $hash = rgpost("input_3");  
+    $iff_number = rgpost("input_2");
+    $hash = rgpost("input_3");
 
     $search_criteria = array(
-    	'status' => 'active',
+        'status' => 'active',
         'field_filters' => array(
-            'mode' => 'all',            
+            'mode' => 'all',
             array(
                 'key' => '1',
                 'value' => $email
@@ -69,21 +73,18 @@ function iff_renewal_form_post_submission( $form ) {
             array(
                 'key' => '2',
                 'value' => $iff_number
-          	),
-          	array(
+            ),
+            array(
                 'key' => '3',
                 'operator' => 'isnot',
                 'value' => $hash
-          	)
+            )
         )
     );
-        
+
     $data = GFAPI::get_entries($formID, $search_criteria);
 
     foreach ($data as $value) {
-    	GFAPI::delete_entry($value['id']);
+        GFAPI::delete_entry($value['id']);
     }
-
 }
-
-?>
