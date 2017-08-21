@@ -3,7 +3,7 @@
 Plugin Name: IFF Membership Form Functions
 Description: Plugin for abstracting custom form functions
 Author: Scott O'Malley
-Version: 1.5
+Version: 1.5.1
 GitHub Plugin URI: https://github.com/TheHandsomeCoder/IFF-Form-Functions
 GitHub Branch:     master
 */
@@ -200,10 +200,12 @@ function get_fencer_details(){
     );
 
     $fencerQuery = GFAPI::get_entries($membershipForm21, $search_criteria);
-    if(count($fencerQuery) > 0){
+    debug_to_console($fencerQuery);
+    if(count($fencerQuery) == 1){
         return $fencerQuery[0];
     } else {
         $fencerQuery = GFAPI::get_entries($membershipForm1, $search_criteria);
+        debug_to_console($fencerQuery);
         return $fencerQuery[0];
     }
 
