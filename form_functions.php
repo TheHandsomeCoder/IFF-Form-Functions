@@ -153,7 +153,7 @@ function form_32_validate_input( $validation_result ) {
 
     if($is_valid) {
 
-      $fencer = get_fencer_details();
+      $fencer = get_fencer_details($iff_number);
       debug_to_console('===================');
       debug_to_console(json_encode($fencer));
       debug_to_console('===================');
@@ -185,7 +185,7 @@ function form_32_validate_input( $validation_result ) {
   return $validation_result;
 }
 
-function get_fencer_details(){
+function get_fencer_details($iff_number){
 
     $membershipForm1 = 1;
     $membershipForm21 = 21;
