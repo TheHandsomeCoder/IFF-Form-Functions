@@ -3,7 +3,7 @@
 Plugin Name: IFF Membership Form Functions
 Description: Plugin for abstracting custom form functions
 Author: Scott O'Malley
-Version: 1.4
+Version: 1.5
 GitHub Plugin URI: https://github.com/TheHandsomeCoder/IFF-Form-Functions
 GitHub Branch:     master
 */
@@ -89,8 +89,7 @@ function iff_renewal_form_post_submission($form)
     }
 }
 
-
-<?php
+//===================================================================
 
 add_filter('gform_pre_submission_32', 'populateIFFNumber');
 function populateIFFNumber( $form ) {
