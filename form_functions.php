@@ -3,7 +3,7 @@
 Plugin Name: IFF Membership Form Functions
 Description: Plugin for abstracting custom form functions
 Author: Scott O'Malley
-Version: 1.5.3
+Version: 1.6.0
 GitHub Plugin URI: https://github.com/TheHandsomeCoder/IFF-Form-Functions
 GitHub Branch:     master
 */
@@ -38,9 +38,13 @@ function form_functions_validate_iff_input($validation_result)
 
     $licenced2015 = GFAPI::get_entries(1, $search_criteria);
     $licenced2016 = GFAPI::get_entries(21, $search_criteria);
+    $licenced2017 = GFAPI::get_entries(32, $search_criteria);
 
 
-    $validation_result['is_valid'] = (count($licenced2015) == 1 || count($licenced2016) == 1);
+    $validation_result['is_valid'] = (
+            count($licenced2015) == 1 ||
+            count($licenced2016) == 1 ||
+            count($licenced2017) == 1);
 
     return $validation_result;
 }
@@ -49,7 +53,7 @@ function form_functions_validate_iff_input($validation_result)
 add_filter( 'gform_pre_submission_22', 'iff_renewal_form_pre_submission' );
 function iff_renewal_form_pre_submission($form)
 {
-    $_POST['input_3'] = strval(md5(uniqid(rand(), true)));
+    $_POST['input_3'] = substr(strval(md5(uniqid(rand(), true))),0,8);
 }
 
 add_filter( 'gform_after_submission_22', 'iff_renewal_form_post_submission' );
@@ -91,7 +95,7 @@ function iff_renewal_form_post_submission($form)
 
 //===================================================================
 
-add_filter('gform_pre_submission_32', 'populateIFFNumber');
+add_filter('gform_pre_submission_61', 'populateIFFNumber');
 function populateIFFNumber( $form ) {
 
   $iff_number = rgpost( "input_19" );
@@ -110,13 +114,13 @@ function populateIFFNumber( $form ) {
   }
 }
 
-add_filter( 'gform_validation_32', 'form_32_validate_input' );
-function form_32_validate_input( $validation_result ) {
+add_filter( 'gform_validation_61', 'form_61_validate_input' );
+function form_61_validate_input( $validation_result ) {
   $form = $validation_result['form'];
   $current_page = rgpost( 'gform_source_page_number_' . $form['id'] ) ? rgpost( 'gform_source_page_number_' .   $form['id'] ) : 1;
 
   if($current_page == 1){
-   form_32_reset_details();
+   form_61_reset_details();
   }
   else if ($current_page == 2) {
     $formID = 22;
@@ -189,6 +193,7 @@ function get_fencer_details($iff_number){
 
     $membershipForm1 = 1;
     $membershipForm21 = 21;
+    $membershipForm32 = 32;
 
     $search_criteria = array(
         'field_filters' => array(
@@ -200,13 +205,21 @@ function get_fencer_details($iff_number){
         )
     );
 
+    $fencerQuery = GFAPI::get_entries($membershipForm32, $search_criteria);
+    debug_to_console(json_encode($fencerQuery));
+    if(count($fencerQuery) == 1) {
+        return $fencerQuery[0];
+    }
+
     $fencerQuery = GFAPI::get_entries($membershipForm21, $search_criteria);
     debug_to_console(json_encode($fencerQuery));
-    if(count($fencerQuery) == 1){
+    if(count($fencerQuery) == 1) {
         return $fencerQuery[0];
-    } else {
-        $fencerQuery = GFAPI::get_entries($membershipForm1, $search_criteria);
-        debug_to_console(json_encode($fencerQuery));
+    }
+
+    $fencerQuery = GFAPI::get_entries($membershipForm1, $search_criteria);
+    debug_to_console(json_encode($fencerQuery));
+    if(count($fencerQuery) == 1){
         return $fencerQuery[0];
     }
 
@@ -216,7 +229,7 @@ function get_fencer_details($iff_number){
 
 }
 
-function form_32_reset_details(){
+function form_61_reset_details(){
     $_POST['input_1_2'] = '';
     $_POST['input_1_3'] = '';
     $_POST['input_1_6'] = '';
