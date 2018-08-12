@@ -249,3 +249,42 @@ function debug_to_console( $data ) {
 
     echo $output;
 }
+
+
+// FIE/EFC Membership check.
+
+add_filter( 'gform_validation_62', 'form_62_validate_input' );
+function form_62_validate_input( $validation_result ) {
+  $form = $validation_result['form'];
+  $current_page = rgpost( 'gform_source_page_number_' . $form['id'] ) ? rgpost( 'gform_source_page_number_' .   $form['id'] ) : 1;
+  $formID = 61;
+
+  if($current_page == 1){
+   $iff_number = rgpost("input_51");
+   $search_criteria = array(
+      'field_filters' => array(
+            'mode' => 'all',
+            array(
+                'key' => '36',
+                'value' => $iff_number
+            )
+        )
+    );
+
+    $detailsFound = GFAPI::get_entries($formID, $search_criteria);
+    $is_valid = (count($detailsFound) == 1 ? true : false);
+    debug_to_console($is_valid);
+    $validation_result['is_valid'] = $is_valid;
+    if(!$is_valid) {
+        foreach( $form['fields'] as &$field ) {
+            if($field['id'] == 61){
+            $field->failed_validation = true;
+            $field->validation_message = "We couldn't find your Fencing Ireland membership, do you have a current licence?";
+            }
+        }
+    }
+  }
+  
+
+  return $validation_result;
+}
