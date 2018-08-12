@@ -277,7 +277,7 @@ function form_62_validate_input( $validation_result ) {
     $validation_result['is_valid'] = $is_valid;
     if(!$is_valid) {
         foreach( $form['fields'] as &$field ) {
-            if($field['id'] == 61){
+            if($field['id'] == 51){
             $field->failed_validation = true;
             $field->validation_message = "We couldn't find your Fencing Ireland membership, do you have a current licence?";
             }
