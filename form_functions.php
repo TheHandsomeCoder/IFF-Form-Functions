@@ -39,12 +39,14 @@ function form_functions_validate_iff_input($validation_result)
     $licenced2015 = GFAPI::get_entries(1, $search_criteria);
     $licenced2016 = GFAPI::get_entries(21, $search_criteria);
     $licenced2017 = GFAPI::get_entries(32, $search_criteria);
+    $licenced2018 = GFAPI::get_entries(61, $search_criteria);
 
 
     $validation_result['is_valid'] = (
             count($licenced2015) == 1 ||
             count($licenced2016) == 1 ||
-            count($licenced2017) == 1);
+            count($licenced2017) == 1 ||
+            count($licenced2018) == 1);
 
     return $validation_result;
 }
@@ -95,7 +97,7 @@ function iff_renewal_form_post_submission($form)
 
 //===================================================================
 
-add_filter('gform_pre_submission_61', 'populateIFFNumber');
+add_filter('gform_pre_submission_70', 'populateIFFNumber');
 function populateIFFNumber( $form ) {
 
   $iff_number = rgpost( "input_19" );
@@ -114,13 +116,13 @@ function populateIFFNumber( $form ) {
   }
 }
 
-add_filter( 'gform_validation_61', 'form_61_validate_input' );
-function form_61_validate_input( $validation_result ) {
+add_filter( 'gform_validation_70', 'form_70_validate_input' );
+function form_70_validate_input( $validation_result ) {
   $form = $validation_result['form'];
   $current_page = rgpost( 'gform_source_page_number_' . $form['id'] ) ? rgpost( 'gform_source_page_number_' .   $form['id'] ) : 1;
 
   if($current_page == 1){
-   form_61_reset_details();
+   form_70_reset_details();
   }
   else if ($current_page == 2) {
     $formID = 22;
@@ -194,6 +196,7 @@ function get_fencer_details($iff_number){
     $membershipForm1 = 1;
     $membershipForm21 = 21;
     $membershipForm32 = 32;
+    $membershipForm61 = 61;
 
     $search_criteria = array(
         'field_filters' => array(
@@ -204,6 +207,12 @@ function get_fencer_details($iff_number){
             )
         )
     );
+
+    $fencerQuery = GFAPI::get_entries($membershipForm61, $search_criteria);
+    debug_to_console(json_encode($fencerQuery));
+    if(count($fencerQuery) == 1) {
+        return $fencerQuery[0];
+    }
 
     $fencerQuery = GFAPI::get_entries($membershipForm32, $search_criteria);
     debug_to_console(json_encode($fencerQuery));
@@ -229,7 +238,7 @@ function get_fencer_details($iff_number){
 
 }
 
-function form_61_reset_details(){
+function form_70_reset_details(){
     $_POST['input_1_2'] = '';
     $_POST['input_1_3'] = '';
     $_POST['input_1_6'] = '';
@@ -257,7 +266,7 @@ add_filter( 'gform_validation_62', 'form_62_validate_input' );
 function form_62_validate_input( $validation_result ) {
   $form = $validation_result['form'];
   $current_page = rgpost( 'gform_source_page_number_' . $form['id'] ) ? rgpost( 'gform_source_page_number_' .   $form['id'] ) : 1;
-  $formID = 61;
+  $formID = 70;
 
   if($current_page == 1){
    $iff_number = rgpost("input_51");
