@@ -262,8 +262,8 @@ function debug_to_console( $data ) {
 
 // FIE/EFC Membership check.
 
-add_filter( 'gform_validation_62', 'form_62_validate_input' );
-function form_62_validate_input( $validation_result ) {
+add_filter( 'gform_validation_71', 'form_71_validate_input' );
+function form_71_validate_input( $validation_result ) {
   $form = $validation_result['form'];
   $current_page = rgpost( 'gform_source_page_number_' . $form['id'] ) ? rgpost( 'gform_source_page_number_' .   $form['id'] ) : 1;
   $formID = 70;
