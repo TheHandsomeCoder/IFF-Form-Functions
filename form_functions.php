@@ -274,7 +274,7 @@ function form_71_validate_input( $validation_result ) {
       'field_filters' => array(
             'mode' => 'all',
             array(
-                'key' => '36',
+                'key' => '19',
                 'value' => $iff_number
             )
         )
